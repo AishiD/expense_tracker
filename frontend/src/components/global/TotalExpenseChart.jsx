@@ -28,17 +28,15 @@ export default function TotalExpenseChart() {
     const grouped = {};
 
     expenses.forEach((expense) => {
-      const date = expense.createdAt.split("T")[0];
+      const date = new Date(expense.createdAt).toLocaleDateString("en-CA", {
+        timeZone: "Asia/Kolkata",
+      });
 
-      grouped[date] =
-        (grouped[date] || 0) + Number(expense.amount || 0);
+      grouped[date] = (grouped[date] || 0) + Number(expense.amount || 0);
     });
 
     return Object.entries(grouped)
-      .sort(
-        ([dateA], [dateB]) =>
-          new Date(dateA) - new Date(dateB)
-      )
+      .sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB))
       .map(([date, amount]) => ({
         date: new Date(date).toLocaleDateString("en-IN", {
           day: "2-digit",
@@ -52,17 +50,13 @@ export default function TotalExpenseChart() {
     <Card>
       <CardHeader>
         <CardTitle>Daily Expenses</CardTitle>
-        <CardDescription>
-          Expense trend by day
-        </CardDescription>
+        <CardDescription>Expense trend by day</CardDescription>
       </CardHeader>
 
       <CardContent>
         {chartData.length === 0 ? (
           <div className="flex h-60 items-center justify-center">
-            <p className="text-muted-foreground">
-              No expense data available
-            </p>
+            <p className="text-muted-foreground">No expense data available</p>
           </div>
         ) : (
           <ChartContainer
@@ -77,20 +71,11 @@ export default function TotalExpenseChart() {
               <BarChart data={chartData}>
                 <CartesianGrid vertical={false} />
 
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                />
+                <XAxis dataKey="date" tickLine={false} axisLine={false} />
 
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                />
+                <YAxis tickLine={false} axisLine={false} />
 
-                <ChartTooltip
-                  content={<ChartTooltipContent />}
-                />
+                <ChartTooltip content={<ChartTooltipContent />} />
 
                 <Bar
                   dataKey="amount"

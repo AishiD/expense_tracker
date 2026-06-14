@@ -41,10 +41,10 @@ export default function HomePage() {
 
       <Button
         onClick={openCreateModal}
-        className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg"
+        className="fixed bottom-6 right-6 z-50 h-10 w-10 sm:w-auto rounded-full shadow-lg px-0 sm:px-4"
       >
-        Add Expense
-        <PlusIcon />
+        <span className="hidden sm:inline">Add Expense</span>
+        <PlusIcon className="sm:ml-2" />
       </Button>
 
       <ExpenseModal
