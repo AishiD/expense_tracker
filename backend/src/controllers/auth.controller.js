@@ -24,12 +24,13 @@ export const register = async (req, res) => {
     const newUser = new User({ fullName, email, password });
 
     if (newUser) {
-      // Generate JWT token and set it in the cookie
-      generateToken(newUser, res);
+      // Generate JWT token
+      const token = generateToken(newUser, res);
       await newUser.save();
 
       return res.status(201).json({
         message: "User registered successfully",
+        token,
         user: newUser,
       });
     } else {
@@ -61,10 +62,11 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    generateToken(user, res);
+    const token = generateToken(user, res);
 
     return res.status(200).json({
       message: "Logged in successfully",
+      token,
       user,
     });
   } catch (error) {
@@ -73,24 +75,22 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-  return res.status(200).json({ message: "Logged out successfully" });
-};
-
 export const getCurrentUser = async (req, res) => {
   try {
-    const user = req.user;
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
     }
-    return res.status(200).json({ user });
+
+    return res.status(200).json({
+      user: req.user,
+    });
   } catch (error) {
     console.error("Error fetching current user:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
   }
 };

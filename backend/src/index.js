@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
 import cors from "cors";
 
 dotenv.config();
@@ -12,7 +11,6 @@ import { connectDB } from "./lib/db.js";
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.APP_BASE_URL,
